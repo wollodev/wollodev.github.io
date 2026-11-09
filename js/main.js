@@ -212,7 +212,7 @@ const heldByPointer = new Map();
 const MAX_BURGERS = 30;
 
 function burgerSize() {
-  return (head.w / head.fat) * 0.42;
+  return (head.w / head.fat) * 1.26;
 }
 
 function spawnBurger(x, y) {
