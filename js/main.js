@@ -212,7 +212,7 @@ const heldByPointer = new Map();
 const MAX_BURGERS = 30;
 
 function burgerSize() {
-  return (head.w / head.fat) * 1.26;
+  return (head.w / head.fat) * 0.8;
 }
 
 function spawnBurger(x, y) {
@@ -331,7 +331,7 @@ function eat(b, now) {
   addPoint();
   head.chewStart = now;
   head.chewUntil = now + CHEW_TIME;
-  head.fat = Math.min(1.5, head.fat + 0.05);
+  head.fat = Math.min(3, head.fat + 0.05);
   const mouth = mouthCenter();
   spawnCrumbs(mouth.x, mouth.y, 12);
   munch(0.02);
