@@ -1,0 +1,250 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+main {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;
+}
+
+main:active {
+  cursor: grabbing;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background: #fff;
+  animation: twinkle var(--duration) ease-in-out forwards;
+}
+
+.star--still {
+  opacity: 0.55;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  20%,
+  75% {
+    opacity: var(--peak);
+  }
+
+  50% {
+    opacity: 0.12;
+  }
+}
+
+/* ---------- Paul ---------- */
+
+.face {
+  /* Row of the lip line in Paul.png (289px of 384px). */
+  --split: 75.3%;
+  --open: 0;
+  --fat: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: calc(clamp(120px, 18vw, 220px) * var(--fat));
+  aspect-ratio: 251 / 384;
+  filter: grayscale(1) sepia(1) saturate(6) hue-rotate(0deg);
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.face__part {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Upper head: flips up like a lid. */
+.face__skull {
+  clip-path: inset(0 0 calc(100% - var(--split)) 0);
+  transform-origin: 50% var(--split);
+  transform: translateY(calc(var(--open) * -30%)) rotate(calc(var(--open) * -5deg));
+}
+
+/* Lower jaw: drops a tiny bit. */
+.face__jaw {
+  clip-path: inset(calc(var(--split) - 0.4%) 0 0 0);
+  transform: translateY(calc(var(--open) * 3%));
+}
+
+/* The dark hole that appears between skull and jaw. */
+.face__mouth {
+  position: absolute;
+  left: 9%;
+  right: 13%;
+  top: calc(var(--split) - var(--open) * 30% - 1%);
+  height: calc(var(--open) * 33% + 3%);
+  border-radius: 46% 46% 40% 40% / 30% 30% 55% 55%;
+  background: radial-gradient(ellipse at 50% 40%, #3a0606 0%, #160000 60%, #050000 100%);
+  overflow: hidden;
+}
+
+.face__mouth::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: -18%;
+  height: 45%;
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(ellipse at 50% 30%, #e0707a, #a83a48);
+}
+
+/* Speech bubble, positioned above the head from JS. */
+.bubble {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.bubble__text {
+  display: block;
+  padding: 0.3em 0.7em;
+  border-radius: 1em;
+  background: #fff;
+  color: #000;
+  font: 700 clamp(13px, 1.6vw, 18px) / 1.2 system-ui, -apple-system, "Segoe UI", sans-serif;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -80%) scale(0.6);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.bubble.is-visible .bubble__text {
+  opacity: 1;
+  transform: translate(-50%, -115%) scale(1);
+}
+
+/* ---------- Burgers ---------- */
+
+.burgers {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.burger {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.burger img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.5));
+}
+
+.crumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 2px;
+  will-change: transform, opacity;
+}
+
+/* ---------- HUD ---------- */
+
+.hud {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font: 700 20px / 1 system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.hud__icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.hud.is-bumped .hud__count {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  40% {
+    transform: scale(1.5);
+  }
+}
+
+.hint {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 24px;
+  z-index: 3;
+  margin: 0;
+  color: rgb(255 255 255 / 0.65);
+  font: 500 15px / 1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.hint.is-hidden {
+  opacity: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
